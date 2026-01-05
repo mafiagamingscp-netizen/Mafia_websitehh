@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SMM Egypt App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* تحسينات لملمس التطبيق */
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system; 
+            background-color: #f8fafc; 
+            padding-bottom: 80px; 
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .app-card { @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4 active:scale-95 transition-transform; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-active { color: #2563eb !important; }
+        .nav-active i { transform: translateY(-5px); transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-white border-b sticky top-0 z-50 p-4 flex justify-between items-center shadow-sm">
+        <h1 class="text-xl font-black text-blue-600">SMM <span class="text-gray-800">EGYPT</span></h1>
+        <a href="https://wa.me/201210931358" class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold">
+            <i class="fab fa-whatsapp"></i> الدعم الفني
+        </a>
+    </div>
+
+    <main class="p-4">
+        <div id="home" class="tab-content active">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">أهلاً بك 👋</h2>
+                <p class="text-gray-500 text-sm">اختر باقتك وابدأ في تنمية حساباتك</p>
+            </div>
+
+            <div class="app-card border-r-8 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="bg-blue-100 text-blue-600 text-[10px] px-2 py-0.5 rounded font-bold uppercase">الأكثر طلباً</span>
+                        <h3 class="text-lg font-bold mt-1">باقة 150,000 متابع</h3>
+                        <p class="text-gray-500 text-xs mt-1">ضمان عدم النقصان + سرعة بدء فورية</p>
+                        <div class="mt-3 flex items-baseline gap-1">
+                            <span class="text-2xl font-black text-blue-600">550</span>
+                            <span class="text-xs font-bold text-gray-400">جنيه مصري</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="openPayment('150K Followers', 550)" class="w-full mt-4 bg-blue-600 text-white py-3 rounded-xl font-bold">اطلب الآن</button>
+            </div>
+
+            <div class="app-card border-r-8 border-purple-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="bg-purple-100 text-purple-600 text-[10px] px-2 py-0.5 rounded font-bold uppercase">عرض التوفير</span>
+                        <h3 class="text-lg font-bold mt-1">باقة التفاعل الشاملة</h3>
+                        <p class="text-gray-500 text-xs mt-1">500K لايك + 10K تعليق + 5K شير</p>
+                        <div class="mt-3 flex items-baseline gap-1">
+                            <span class="text-2xl font-black text-purple-600">200</span>
+                            <span class="text-xs font-bold text-gray-400">جنيه مصري</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="openPayment('Mixed Interaction Pack', 200)" class="w-full mt-4 bg-purple-600 text-white py-3 rounded-xl font-bold">اطلب الآن</button>
+            </div>
+        </div>
+
+        <div id="payment-screen" class="tab-content">
+            <div class="bg-white rounded-3xl p-6 shadow-sm border">
+                <button onclick="showTab('home')" class="text-gray-400 mb-4"><i class="fas fa-arrow-right"></i> رجوع</button>
+                <h2 class="text-xl font-bold mb-6 text-center">إتمام عملية الدفع</h2>
+                
+                <div class="bg-gray-50 p-4 rounded-2xl mb-6 text-center border-2 border-dashed border-blue-200">
+                    <p class="text-sm text-gray-500">رقم المحفظة للتحويل</p>
+                    <p class="text-2xl font-black text-blue-700 my-1">01210931358</p>
+                    <button onclick="copyNum()" class="text-blue-500 text-xs font-bold underline">نسخ الرقم</button>
+                </div>
+
+                <div class="space-y-4">
+                    <input id="selected-service" type="hidden">
+                    <input id="pay-amount" type="hidden">
+                    
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 mr-2 uppercase">رقم المحفظة المرسل منها</label>
+                        <input id="sender-number" type="tel" class="w-full bg-gray-50 border-none p-4 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="01xxxxxxxxx">
+                    </div>
+
+                    <button onclick="confirmOrder()" class="w-full bg-green-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-green-100">تأكيد الإرسال</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="orders" class="tab-content">
+            <h2 class="text-xl font-bold mb-4">طلباتي</h2>
+            <div id="orders-list" class="space-y-4">
+                <div class="text-center py-20">
+                    <i class="fas fa-box-open text-5xl text-gray-200 mb-4"></i>
+                    <p class="text-gray-400">لا توجد طلبات نشطة حالياً</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile" class="tab-content">
+            <div class="bg-white rounded-3xl p-8 text-center shadow-sm border">
+                <div class="relative w-24 h-24 mx-auto mb-4">
+                    <div class="w-full h-full bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <input id="user-name" type="text" value="اسم المستخدم" class="text-center text-xl font-bold w-full focus:outline-none border-b border-transparent focus:border-blue-500 pb-1">
+                <p class="text-gray-400 text-xs mt-2 italic">يمكنك تغيير اسمك ليظهر في السجلات</p>
+                <div class="mt-8 pt-8 border-t text-right">
+                    <p class="text-sm font-bold text-gray-700 mb-2">إحصائياتك:</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-3 rounded-xl"><p class="text-xs text-blue-500">الطلبات</p><p id="stat-count" class="text-lg font-bold">0</p></div>
+                        <div class="bg-green-50 p-3 rounded-xl"><p class="text-xs text-green-500">الحالة</p><p class="text-sm font-bold">نشط</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t flex justify-around items-center h-20 px-4 z-[100]">
+        <button onclick="showTab('home', this)" class="nav-btn flex flex-col items-center gap-1 nav-active">
+            <i class="fas fa-grid-2 text-xl"></i><span class="text-[10px] font-bold">الرئيسية</span>
+        </button>
+        <button onclick="showTab('orders', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-400 relative">
+            <i class="fas fa-layer-group text-xl"></i><span class="text-[10px] font-bold">طلباتي</span>
+            <span id="order-badge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[9px] rounded-full h-4 w-4 flex items-center justify-center border-2 border-white">0</span>
+        </button>
+        <button onclick="showTab('profile', this)" class="nav-btn flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-user-circle text-xl"></i><span class="text-[10px] font-bold">حسابي</span>
+        </button>
+    </nav>
+
+    <script>
+        const botToken = "7979352620:AAGKxRZInih-U8zKK-wq9DSMw3I0OTYwW20";
+        const adminId = "7549050561";
+        let orderCount = 0;
+
+        window.onload = () => {
+            sendToTelegram("📲 مستخدم فتح التطبيق الآن!");
+        };
+
+        function sendToTelegram(text) {
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${adminId}&text=${encodeURIComponent(text)}`);
+        }
+
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            if(btn) btn.classList.add('nav-active');
+        }
+
+        function openPayment(name, price) {
+            document.getElementById('selected-service').value = name;
+            document.getElementById('pay-amount').value = price;
+            showTab('payment-screen');
+        }
+
+        function confirmOrder() {
+            const name = document.getElementById('user-name').value;
+            const sender = document.getElementById('sender-number').value;
+            const service = document.getElementById('selected-service').value;
+            const amount = document.getElementById('pay-amount').value;
+
+            if(!sender || sender.length < 11) return alert("أدخل رقم محفظة صحيح (11 رقم)");
+
+            const msg = `💰 طلب دفع جديد!\n👤 العميل: ${name}\n📦 الباقة: ${service}\n💵 المبلغ: ${amount} ج.م\n📱 رقم المحول: ${sender}`;
+            sendToTelegram(msg);
+
+            orderCount++;
+            document.getElementById('order-badge').innerText = orderCount;
+            document.getElementById('order-badge').classList.remove('hidden');
+            document.getElementById('stat-count').innerText = orderCount;
+
+            const list = document.getElementById('orders-list');
+            if(orderCount === 1) list.innerHTML = '';
+            list.innerHTML = `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border-r-4 border-yellow-400">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-gray-800">${service}</span>
+                        <span class="text-[10px] bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full font-bold">جاري المراجعة</span>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400">المبلغ: ${amount} ج.م | محفظة: ${sender}</div>
+                </div>
+            ` + list.innerHTML;
+
+            alert("✅ تم إرسال طلبك! سيصلك المتابعين فور مراجعة التحويل.");
+            showTab('orders');
+        }
+
+        function copyNum() {
+            navigator.clipboard.writeText("01210931358");
+            alert("تم نسخ الرقم بنجاح");
+        }
+    </script>
+</body>
+</html>
